@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { log } from "console";
+import Link from "next/link";
 
 interface RegistrationFormData {
   name: string;
@@ -217,12 +217,12 @@ const Registration: React.FC = () => {
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <a
-                  href="#"
+                <Link
+                  href="/login"
                   className="text-primary font-medium underline underline-offset-4 transition-colors duration-200 hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/40"
                 >
                   Sign in here
-                </a>
+                </Link>
               </p>
             </div>
           </form>
