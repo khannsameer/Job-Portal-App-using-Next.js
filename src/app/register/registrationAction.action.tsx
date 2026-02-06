@@ -1,7 +1,16 @@
 "use server";
 
-export const registrationAction = async (formData: FormData) => {
-  const { name, userName, email, password, confirmPassword, role } =
-    Object.fromEntries(formData.entries());
-  console.log(name, userName, email, password, confirmPassword, role);
+import { db } from "@/config/db";
+import { users } from "@/drizzle/schema";
+
+export const registrationAction = async (registrationData: {
+  name: string;
+  userName: string;
+  email: string;
+  password: string;
+  role: "applicant" | "employer";
+}) => {
+  const { name, userName, email, password, role } = registrationData;
+
+  await db.insert(users).values({ name, userName, email, password, role });
 };

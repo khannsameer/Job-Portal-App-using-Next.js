@@ -51,10 +51,21 @@ const Registration: React.FC = () => {
     }));
   };
   //   console.log(formData);
-  //   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-  //     try {
-  //     } catch (error) {}
-  //   };
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+
+      //typically make your API call
+      const registrationData = {
+        name: formData.name.trim(),
+        userName: formData.userName.trim(),
+        email: formData.email.toLowerCase().trim(),
+        password: formData.password,
+        role: formData.role,
+      };
+      await registrationAction(registrationData);
+    } catch (error) {}
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -68,7 +79,7 @@ const Registration: React.FC = () => {
         </CardHeader>
 
         <CardContent>
-          <form action={registrationAction} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name filed */}
             <div className="space-y-2">
               <Label htmlFor="name">Full Name *</Label>
