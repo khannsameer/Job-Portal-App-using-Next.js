@@ -37,18 +37,15 @@ export const registerUserSchema = z.object({
 // z.infer automatically creates a TypeScript type from yous zod schema
 export type RegisterUserData = z.infer<typeof registerUserSchema>;
 
+// Create a schema with password confirmation - in server we don't need confPass
 export const registerUserWithConfirmSchema = registerUserSchema
   .extend({
     confirmPassword: z.string(),
   })
-  .refine(
-    (registrationData) =>
-      registrationData.password === registrationData.confirmPassword,
-    {
-      message: "Password don't match",
-      path: ["confirmPassword"],
-    },
-  );
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password don't match",
+    path: ["confirmPassword"],
+  });
 
 export type RegisterUserWithConfirmData = z.infer<
   typeof registerUserWithConfirmSchema
