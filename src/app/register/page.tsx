@@ -63,12 +63,28 @@ const Registration: React.FC = () => {
         password: formData.password,
         role: formData.role,
       };
+
+      if (formData.password !== formData.confirmPassword)
+        return alert("Password are not matching");
+
       await registrationAction(registrationData);
     } catch (error) {}
   };
 
+  const getPasswordStrength = (password: string) => {
+    let score = 0;
+
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    return score; // 0–4
+  };
+  const passwordStrength = getPasswordStrength(formData.password);
+
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 overflow-y-auto">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
@@ -78,8 +94,8 @@ const Registration: React.FC = () => {
           <CardDescription>Create your account to get started</CardDescription>
         </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="py-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name filed */}
             <div className="space-y-2">
               <Label htmlFor="name">Full Name *</Label>
@@ -192,6 +208,37 @@ const Registration: React.FC = () => {
                   )}
                 </Button>
               </div>
+              {formData.password && (
+                <div className="mt-1 space-y-1">
+                  {/* Strength bar */}
+                  <div className="flex h-1 w-full gap-1">
+                    {[1, 2, 3, 4].map((level) => (
+                      <span
+                        key={level}
+                        className={`flex-1 rounded-full transition-colors ${
+                          passwordStrength >= level
+                            ? passwordStrength <= 1
+                              ? "bg-red-500"
+                              : passwordStrength === 2
+                                ? "bg-yellow-500"
+                                : passwordStrength === 3
+                                  ? "bg-blue-500"
+                                  : "bg-green-500"
+                            : "bg-muted"
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Strength text */}
+                  <p className="text-xs text-muted-foreground">
+                    {passwordStrength <= 1 && "Weak password"}
+                    {passwordStrength === 2 && "Fair password"}
+                    {passwordStrength === 3 && "Good password"}
+                    {passwordStrength === 4 && "Strong password"}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Confirm Password */}
@@ -205,7 +252,7 @@ const Registration: React.FC = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   required
-                  value={formData.password}
+                  value={formData.confirmPassword}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     handleInputChange("confirmPassword", e.target.value)
                   }
@@ -217,7 +264,7 @@ const Registration: React.FC = () => {
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowConfirmPassword(!showPassword)}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="w-4 h-4 text-muted-foreground" />
