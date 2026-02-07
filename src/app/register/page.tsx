@@ -22,69 +22,44 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { registrationAction } from "./registrationAction.action";
 import { toast } from "sonner";
-
-interface RegistrationFormData {
-  name: string;
-  userName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  role: "applicant" | "employer";
-}
+import {
+  RegisterUserWithConfirmData,
+  registerUserWithConfirmSchema,
+} from "@/features/auth/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { CheckCircle } from "lucide-react";
 
 const Registration: React.FC = () => {
-  const [formData, setFormData] = useState<RegistrationFormData>({
-    name: "",
-    userName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "applicant",
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerUserWithConfirmSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
+
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
+  const isPasswordMatched =
+    password && confirmPassword && password === confirmPassword;
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleInputChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
   //   console.log(formData);
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const onSubmit = async (data: RegisterUserWithConfirmData) => {
     try {
-      e.preventDefault();
-
-      //typically make your API call
-      const registrationData = {
-        name: formData.name.trim(),
-        userName: formData.userName.trim(),
-        email: formData.email.toLowerCase().trim(),
-        password: formData.password,
-        role: formData.role,
-      };
-
-      if (formData.password !== formData.confirmPassword)
-        return toast.error("Password are not matching");
-
-      const result = await registrationAction(registrationData);
+      const result = await registrationAction(data);
       if (result.status === "SUCCESS") toast.success(result.message);
       else toast.error(result.message);
     } catch (error) {}
   };
-
-  const getPasswordStrength = (password: string) => {
-    let score = 0;
-
-    if (password.length >= 8) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-
-    return score; // 0–4
-  };
-  const passwordStrength = getPasswordStrength(formData.password);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 overflow-y-auto">
@@ -98,7 +73,7 @@ const Registration: React.FC = () => {
         </CardHeader>
 
         <CardContent className="py-4">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Name filed */}
             <div className="space-y-2">
               <Label htmlFor="name">Full Name *</Label>
@@ -106,17 +81,18 @@ const Registration: React.FC = () => {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="name"
-                  name="name"
                   type="text"
                   placeholder="Enter your full name"
                   required
-                  value={formData.name}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("name", e.target.value)
-                  }
-                  className={`pl-10`}
+                  {...register("name")}
+                  className={`pl-10 ${errors.name ? "border-destructive" : ""}`}
                 />
               </div>
+              {errors.name && (
+                <p className="text-sm text-destructive">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             {/* Username field */}
@@ -126,17 +102,18 @@ const Registration: React.FC = () => {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="userName"
-                  name="userName"
                   type="text"
                   placeholder="Choose a username"
                   required
-                  value={formData.userName}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("userName", e.target.value)
-                  }
-                  className={`pl-10`}
+                  {...register("userName")}
+                  className={`pl-10 ${errors.userName ? "border-destructive" : ""}`}
                 />
               </div>
+              {errors.userName && (
+                <p className="text-sm text-destructive">
+                  {errors.userName.message}
+                </p>
+              )}
             </div>
 
             {/* Email field */}
@@ -146,37 +123,46 @@ const Registration: React.FC = () => {
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="email"
-                  name="email"
                   type="email"
                   placeholder="Enter your email"
                   required
-                  value={formData.email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("email", e.target.value)
-                  }
-                  className={`pl-10`}
+                  {...register("email")}
+                  className={`pl-10 ${errors.email ? "border-destructive" : ""}`}
                 />
               </div>
+              {errors.email && (
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Role Selection */}
             <div className="space-y-2 w-full">
-              <Label htmlFor="role">I am a *</Label>
-              <Select
+              <Label>I am a *</Label>
+
+              <Controller
                 name="role"
-                value={formData.role}
-                onValueChange={(value: "applicant" | "employer") =>
-                  handleInputChange("role", value)
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="applicant">Job Applicant</SelectItem>
-                  <SelectItem value="employer">Employer</SelectItem>
-                </SelectContent>
-              </Select>
+                control={control}
+                defaultValue="applicant"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="applicant">Job Applicant</SelectItem>
+                      <SelectItem value="employer">Employer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              {errors.role && (
+                <p className="text-sm text-destructive">
+                  {errors.role.message}
+                </p>
+              )}
             </div>
 
             {/* Password Field*/}
@@ -186,14 +172,10 @@ const Registration: React.FC = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="password"
-                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   required
-                  value={formData.password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("password", e.target.value)
-                  }
+                  {...register("password")}
                   className={`pl-10`}
                 />
 
@@ -211,36 +193,10 @@ const Registration: React.FC = () => {
                   )}
                 </Button>
               </div>
-              {formData.password && (
-                <div className="mt-1 space-y-1">
-                  {/* Strength bar */}
-                  <div className="flex h-1 w-full gap-1">
-                    {[1, 2, 3, 4].map((level) => (
-                      <span
-                        key={level}
-                        className={`flex-1 rounded-full transition-colors ${
-                          passwordStrength >= level
-                            ? passwordStrength <= 1
-                              ? "bg-red-500"
-                              : passwordStrength === 2
-                                ? "bg-yellow-500"
-                                : passwordStrength === 3
-                                  ? "bg-blue-500"
-                                  : "bg-green-500"
-                            : "bg-muted"
-                        }`}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Strength text */}
-                  <p className="text-xs text-muted-foreground">
-                    {passwordStrength <= 1 && "Weak password"}
-                    {passwordStrength === 2 && "Fair password"}
-                    {passwordStrength === 3 && "Good password"}
-                    {passwordStrength === 4 && "Strong password"}
-                  </p>
-                </div>
+              {errors.password && (
+                <p className="text-sm text-destructive">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
@@ -248,25 +204,26 @@ const Registration: React.FC = () => {
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password *</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
-                  name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("confirmPassword", e.target.value)
-                  }
-                  className={`pl-10`}
+                  {...register("confirmPassword")}
+                  className={`pl-10 ${
+                    errors.confirmPassword
+                      ? "border-destructive"
+                      : isPasswordMatched
+                        ? "border-green-500"
+                        : ""
+                  }`}
                 />
 
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  className="absolute right-0 top-0 h-full px-3"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
@@ -276,6 +233,21 @@ const Registration: React.FC = () => {
                   )}
                 </Button>
               </div>
+
+              {/* Zod error */}
+              {errors.confirmPassword && (
+                <p className="text-sm text-destructive">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+
+              {/*Success message */}
+              {!errors.confirmPassword && isPasswordMatched && (
+                <p className="flex items-center gap-2 text-sm text-green-600">
+                  <CheckCircle className="w-4 h-4" />
+                  Password matched
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
