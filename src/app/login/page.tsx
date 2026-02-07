@@ -13,6 +13,8 @@ import { Eye, EyeOff, Lock, Mail, UserCheck } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
+import { loginUserAction } from "./loginUserAction.action";
 
 interface LoginFormData {
   email: string;
@@ -34,8 +36,17 @@ const LoginForm: React.FC = () => {
     }));
   };
   //   console.log(formData);
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
+      //typically make your API call
+      const LoginData = {
+        email: formData.email.toLowerCase().trim(),
+        password: formData.password,
+      };
+      const result = await loginUserAction(LoginData);
+      if (result.status === "SUCCESS") toast.success(result.message);
+      else toast.error(result.message);
     } catch (error) {}
   };
 
