@@ -15,36 +15,28 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
 import { loginUserAction } from "./loginUserAction.action";
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginUserData, loginUserSchema } from "@/features/auth/auth.schema";
 
 const LoginForm: React.FC = () => {
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginUserSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleInputChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  //   console.log(formData);
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginUserData) => {
     try {
-      //typically make your API call
-      const LoginData = {
-        email: formData.email.toLowerCase().trim(),
-        password: formData.password,
-      };
-      const result = await loginUserAction(LoginData);
+      const result = await loginUserAction(data);
       if (result.status === "SUCCESS") toast.success(result.message);
       else toast.error(result.message);
     } catch (error) {}
@@ -62,7 +54,7 @@ const LoginForm: React.FC = () => {
         </CardHeader>
 
         <CardContent className="pb-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email field */}
             <div className="space-y-2">
               <Label htmlFor="email">Email Address *</Label>
@@ -73,13 +65,15 @@ const LoginForm: React.FC = () => {
                   type="email"
                   placeholder="Enter your email"
                   required
-                  value={formData.email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("email", e.target.value)
-                  }
-                  className={`pl-10`}
+                  {...register("email")}
+                  className={`pl-10 ${errors.email ? "border-destructive" : ""}`}
                 />
               </div>
+              {errors.email && (
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password Field*/}
@@ -92,11 +86,8 @@ const LoginForm: React.FC = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   required
-                  value={formData.password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleInputChange("password", e.target.value)
-                  }
-                  className={`pl-10`}
+                  {...register("password")}
+                  className={`pl-10 ${errors.password ? "border-destructive" : ""}`}
                 />
 
                 <Button
@@ -113,6 +104,11 @@ const LoginForm: React.FC = () => {
                   )}
                 </Button>
               </div>
+              {errors.password && (
+                <p className="text-sm text-destructive">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
