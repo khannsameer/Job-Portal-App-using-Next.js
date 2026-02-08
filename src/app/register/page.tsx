@@ -140,7 +140,6 @@ const Registration: React.FC = () => {
             {/* Role Selection */}
             <div className="space-y-2 w-full">
               <Label>I am a *</Label>
-
               <Controller
                 name="role"
                 control={control}
@@ -214,7 +213,7 @@ const Registration: React.FC = () => {
                     errors.confirmPassword
                       ? "border-destructive"
                       : isPasswordMatched
-                        ? "border-green-500"
+                        ? ""
                         : ""
                   }`}
                 />
