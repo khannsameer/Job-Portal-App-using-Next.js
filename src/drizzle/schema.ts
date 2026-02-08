@@ -22,7 +22,7 @@ export const users = mysqlTable("users", {
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
-export const session = mysqlTable("sessions", {
+export const sessions = mysqlTable("sessions", {
   id: varchar("id", { length: 255 }).primaryKey(),
   userId: int("user_id")
     .notNull()
