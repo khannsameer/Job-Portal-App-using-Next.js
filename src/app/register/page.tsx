@@ -29,6 +29,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { CheckCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Registration: React.FC = () => {
   const {
@@ -43,6 +44,8 @@ const Registration: React.FC = () => {
     reValidateMode: "onChange",
   });
 
+  const router = useRouter();
+
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
 
@@ -56,6 +59,14 @@ const Registration: React.FC = () => {
   const onSubmit = async (data: RegisterUserWithConfirmData) => {
     try {
       const result = await registrationAction(data);
+
+      if (result.status === "SUCCESS") {
+        if (data.role === "employer") router.push("/employer-dashboard");
+        else {
+          router.push("/applicant-dashboard");
+        }
+      }
+
       if (result.status === "SUCCESS") toast.success(result.message);
       else toast.error(result.message);
     } catch (error) {}
