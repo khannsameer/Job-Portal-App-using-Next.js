@@ -107,6 +107,6 @@ export const validateSessionAndGetUser = async (session: string) => {
   return user;
 };
 
-const invalidDateSession = async (id: string) => {
+export const invalidDateSession = async (id: string) => {
   await db.delete(sessions).where(eq(sessions.id, id));
 };
