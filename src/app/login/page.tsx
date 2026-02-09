@@ -18,6 +18,7 @@ import { loginUserAction } from "./loginUserAction.action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserData, loginUserSchema } from "@/features/auth/auth.schema";
+import { useRouter } from "next/navigation";
 
 const LoginForm: React.FC = () => {
   const {
@@ -32,11 +33,21 @@ const LoginForm: React.FC = () => {
     reValidateMode: "onChange",
   });
 
+  // const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: LoginUserData) => {
     try {
       const result = await loginUserAction(data);
+
+      // if (result.status === "SUCCESS") {
+      //   if (data. === "employer") router.push("/employer-dashboard");
+      //   else {
+      //     router.push("/applicant-dashboard");
+      //   }
+      // }
+
       if (result.status === "SUCCESS") toast.success(result.message);
       else toast.error(result.message);
     } catch (error) {}
