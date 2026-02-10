@@ -21,7 +21,7 @@ export const getCurrentEmployerDetails = async () => {
       isProfileCompleted: false,
     };
   }
-  console.log(employer);
+  //   console.log(employer);
   const isProfileCompleted = Boolean(
     employer.name &&
     employer.description &&
