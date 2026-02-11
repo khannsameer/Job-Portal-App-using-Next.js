@@ -4,9 +4,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Building2, Calendar, FileText, Globe, MapPin } from "lucide-react";
-import { useForm } from "react-hook-form";
+import {
+  Briefcase,
+  Building2,
+  Calendar,
+  FileText,
+  Globe,
+  MapPin,
+} from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+
+const organizationTypeOptions = ["development", "business", "design"] as const;
+type OrganizationType = (typeof organizationTypeOptions)[number];
+
+const teamSizeOptions = ["1-5", "6-20", "21-50"] as const;
+type TeamSize = (typeof teamSizeOptions)[number];
 
 interface IFormInput {
   username: string;
@@ -16,6 +36,8 @@ interface IFormInput {
   yearOfEstablishment: number;
   location: string;
   websiteUrl: string;
+  organizationType: OrganizationType;
+  teamSize: TeamSize;
 }
 
 const EmployerSettingForm = () => {
@@ -23,6 +45,7 @@ const EmployerSettingForm = () => {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm<IFormInput>();
 
@@ -63,6 +86,62 @@ const EmployerSettingForm = () => {
             </div>
           </div>
 
+          {/* Organization Type and Team size */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Organization Type */}
+            <div className="space-y-2">
+              <Label htmlFor="organizationType">Organization Type *</Label>
+              <Controller
+                name="organizationType"
+                control={control}
+                render={({ field }) => (
+                  <div className="relative">
+                    <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="pl-10 w-full ">
+                        <SelectValue placeholder="Select organization type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {organizationTypeOptions.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {/* {capitalizeWords(type)} */}
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              />
+            </div>
+
+            {/* Team size */}
+            <div className="space-y-2">
+              <Label htmlFor="teamSize">Team Size *</Label>
+              <Controller
+                name="teamSize"
+                control={control}
+                render={({ field }) => (
+                  <div className="relative">
+                    <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground Z-10" />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="pl-10 w-full ">
+                        <SelectValue placeholder="Select Team Size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {teamSizeOptions.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {/* {capitalizeWords(type)} */}
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              />
+            </div>
+          </div>
           {/* Year of Establishment  - Two columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
