@@ -32,7 +32,7 @@ const EmployerProfileCompletionStatus = async () => {
         </ItemContent>
         <ItemActions>
           <Button size="sm" variant="destructive" asChild>
-            <Link href="/employer/dashboard/settings">Complete Profile</Link>
+            <Link href="/employer-dashboard/settings">Complete Profile</Link>
           </Button>
         </ItemActions>
       </Item>
