@@ -23,24 +23,13 @@ import {
 } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-const organizationTypeOptions = ["development", "business", "design"] as const;
-type OrganizationType = (typeof organizationTypeOptions)[number];
-
-const teamSizeOptions = ["1-5", "6-20", "21-50"] as const;
-type TeamSize = (typeof teamSizeOptions)[number];
-
-interface IFormInput {
-  username: string;
-  email: string;
-  name: string;
-  description: string;
-  yearOfEstablishment: string;
-  location: string;
-  websiteUrl: string;
-  organizationType: OrganizationType;
-  teamSize: TeamSize;
-}
+import {
+  EmployerProfileData,
+  employerProfileSchema,
+  organizationTypes,
+  teamSizes,
+} from "../employers.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const EmployerSettingForm = () => {
   const {
@@ -49,9 +38,11 @@ const EmployerSettingForm = () => {
     watch,
     control,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<EmployerProfileData>({
+    resolver: zodResolver(employerProfileSchema),
+  });
 
-  const handleFormSubmit = async (data: IFormInput) => {
+  const handleFormSubmit = async (data: EmployerProfileData) => {
     console.log(data);
     const response = await updateEmployerProfileAction(data);
     if (response.status === "SUCCESS") {
@@ -74,10 +65,13 @@ const EmployerSettingForm = () => {
                 id="companyName"
                 type="text"
                 placeholder="Enter company name"
-                className="pl-10"
+                className={`pl-10 ${errors.name ? "border-destructive" : ""}`}
                 {...register("name")}
               />
             </div>
+            {errors.name && (
+              <p className="text-sm text-destructive">{errors.name.message}</p>
+            )}
           </div>
 
           {/* Description */}
@@ -88,10 +82,15 @@ const EmployerSettingForm = () => {
               <Textarea
                 id="description"
                 placeholder="Tell us about your company, what you do, and your mission ... "
-                className="pl-10 min-h-30 resize-none "
+                className={`pl-10 min-h-30 resize-none ${errors.description ? "border-destructive" : ""}`}
                 {...register("description")}
               />
             </div>
+            {errors.description && (
+              <p className="text-sm text-destructive">
+                {errors.description.message}
+              </p>
+            )}
           </div>
 
           {/* Organization Type and Team size */}
@@ -106,11 +105,13 @@ const EmployerSettingForm = () => {
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="pl-10 w-full ">
+                      <SelectTrigger
+                        className={`pl-10 w-full ${errors.organizationType ? "border-destructive" : ""}`}
+                      >
                         <SelectValue placeholder="Select organization type" />
                       </SelectTrigger>
                       <SelectContent>
-                        {organizationTypeOptions.map((type) => (
+                        {organizationTypes.map((type) => (
                           <SelectItem key={type} value={type}>
                             {/* {capitalizeWords(type)} */}
                             {type}
@@ -121,6 +122,11 @@ const EmployerSettingForm = () => {
                   </div>
                 )}
               />
+              {errors.organizationType && (
+                <p className="text-sm text-destructive">
+                  {errors.organizationType.message}
+                </p>
+              )}
             </div>
 
             {/* Team size */}
@@ -133,11 +139,13 @@ const EmployerSettingForm = () => {
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground Z-10" />
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="pl-10 w-full ">
+                      <SelectTrigger
+                        className={`pl-10 w-full ${errors.teamSize ? "border-destructive" : ""}`}
+                      >
                         <SelectValue placeholder="Select Team Size" />
                       </SelectTrigger>
                       <SelectContent>
-                        {teamSizeOptions.map((type) => (
+                        {teamSizes.map((type) => (
                           <SelectItem key={type} value={type}>
                             {/* {capitalizeWords(type)} */}
                             {type}
@@ -148,6 +156,11 @@ const EmployerSettingForm = () => {
                   </div>
                 )}
               />
+              {errors.teamSize && (
+                <p className="text-sm text-destructive">
+                  {errors.teamSize.message}
+                </p>
+              )}
             </div>
           </div>
           {/* Year of Establishment  - Two columns */}
@@ -163,10 +176,15 @@ const EmployerSettingForm = () => {
                   type="text"
                   placeholder="e.g., 2020"
                   maxLength={4}
-                  className="pl-10"
+                  className={`pl-10 ${errors.yearOfEstablishment ? "border-destructive" : ""}`}
                   {...register("yearOfEstablishment")}
                 />
               </div>
+              {errors.yearOfEstablishment && (
+                <p className="text-sm text-destructive">
+                  {errors.yearOfEstablishment.message}
+                </p>
+              )}
             </div>
 
             {/*  Location - Two columns */}
@@ -177,12 +195,16 @@ const EmployerSettingForm = () => {
                 <Input
                   id="location"
                   type="text"
-                  placeholder="e.g., 2020"
-                  maxLength={4}
-                  className="pl-10"
+                  placeholder="e.g., Mumbai"
+                  className={`pl-10 ${errors.location ? "border-destructive" : ""}`}
                   {...register("location")}
                 />
               </div>
+              {errors.location && (
+                <p className="text-sm text-destructive">
+                  {errors.location.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -195,10 +217,15 @@ const EmployerSettingForm = () => {
                 id="websiteUrl"
                 type="text"
                 placeholder="https://ww.yourcompany.com"
-                className="pl-10"
+                className={`pl-10 ${errors.websiteUrl ? "border-destructive" : ""}`}
                 {...register("websiteUrl")}
               />
             </div>
+            {errors.websiteUrl && (
+              <p className="text-sm text-destructive">
+                {errors.websiteUrl.message}
+              </p>
+            )}
           </div>
 
           <Button type="submit">Save</Button>
