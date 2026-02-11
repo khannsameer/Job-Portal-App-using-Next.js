@@ -23,11 +23,11 @@ export const getCurrentEmployerDetails = async () => {
   }
   //   console.log(employer);
   const isProfileCompleted = Boolean(
-    employer.name &&
-    employer.description &&
-    employer.avatarUrl &&
-    employer.organizationType &&
-    employer.yearOfEstablishment,
+    employer?.name?.trim() &&
+    employer?.description?.trim() &&
+    employer?.organizationType &&
+    employer?.yearOfEstablishment !== null,
   );
+
   return { ...currentUser, employerDetails: employer, isProfileCompleted };
 };

@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { updateEmployerProfileAction } from "@/features/servers/employer.action";
 import {
   Briefcase,
   Building2,
@@ -21,6 +22,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const organizationTypeOptions = ["development", "business", "design"] as const;
 type OrganizationType = (typeof organizationTypeOptions)[number];
@@ -33,7 +35,7 @@ interface IFormInput {
   email: string;
   name: string;
   description: string;
-  yearOfEstablishment: number;
+  yearOfEstablishment: string;
   location: string;
   websiteUrl: string;
   organizationType: OrganizationType;
@@ -49,8 +51,14 @@ const EmployerSettingForm = () => {
     formState: { errors },
   } = useForm<IFormInput>();
 
-  const handleFormSubmit = (data: IFormInput) => {
+  const handleFormSubmit = async (data: IFormInput) => {
     console.log(data);
+    const response = await updateEmployerProfileAction(data);
+    if (response.status === "SUCCESS") {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   return (
