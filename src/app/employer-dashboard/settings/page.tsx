@@ -1,3 +1,5 @@
+// "use server";
+
 import EmployerSettingForm from "@/features/employers/components/employer-setting-form";
 import { EmployerProfileData } from "@/features/employers/employers.schema";
 import { getCurrentEmployerDetails } from "@/features/servers/employers.queries";
@@ -7,7 +9,7 @@ const EmployerSettings = async () => {
   const currentEmployer = await getCurrentEmployerDetails();
   if (!currentEmployer) return redirect("/login");
 
-  console.log("Current Employer:", currentEmployer);
+  // console.log("Current Employer:", currentEmployer);
 
   return (
     <div>

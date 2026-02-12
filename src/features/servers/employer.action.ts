@@ -10,7 +10,9 @@ export const updateEmployerProfileAction = async (
   data: EmployerProfileData,
 ) => {
   try {
+    console.log("ACTION TRIGGERED");
     const currentUser = await getCurrentUser();
+    console.log("Current User:", currentUser);
     if (!currentUser || currentUser.role !== "employer") {
       return { status: "ERROR", message: "Unauthorized" };
     }

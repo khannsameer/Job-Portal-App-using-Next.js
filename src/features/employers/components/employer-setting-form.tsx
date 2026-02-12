@@ -19,6 +19,7 @@ import {
   Calendar,
   FileText,
   Globe,
+  Loader,
   MapPin,
 } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
@@ -31,14 +32,6 @@ import {
 } from "../employers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// interface Props {
-//   initialData?: Partial<EmployerProfileData>
-// }
-
-// export const EmployerSettingForm = ({initialData}:Props)=>{
-
-// }
-
 const EmployerSettingForm = ({
   initialData,
 }: {
@@ -49,7 +42,7 @@ const EmployerSettingForm = ({
     handleSubmit,
     watch,
     control,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<EmployerProfileData>({
     defaultValues: {
       name: initialData?.name || "",
@@ -250,7 +243,15 @@ const EmployerSettingForm = ({
             )}
           </div>
 
-          <Button type="submit">Save</Button>
+          <div className="flex items-center gap-4 pt-4">
+            <Button type="submit">
+              {isSubmitting && <Loader className="w-4 h-4 animate-spin" />}
+              {isSubmitting ? "Saving Changes ... " : "Save Changes"}
+            </Button>
+            {!isDirty && (
+              <p className="text-sm text-muted-foreground">No change to save</p>
+            )}
+          </div>
         </form>
       </CardContent>
     </Card>
