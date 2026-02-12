@@ -24,6 +24,7 @@ export const updateEmployerProfileAction = async (
       organizationType,
       teamSize,
     } = data;
+
     const updatedEmployer = await db
       .update(employers)
       .set({
@@ -39,6 +40,7 @@ export const updateEmployerProfileAction = async (
       })
       .where(eq(employers.id, currentUser.id));
     console.log("employers", updatedEmployer);
+
     return { status: "SUCCESS", message: "Profile update successfully" };
   } catch (error) {
     return {

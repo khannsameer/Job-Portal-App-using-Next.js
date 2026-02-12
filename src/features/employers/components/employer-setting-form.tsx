@@ -31,7 +31,19 @@ import {
 } from "../employers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const EmployerSettingForm = () => {
+// interface Props {
+//   initialData?: Partial<EmployerProfileData>
+// }
+
+// export const EmployerSettingForm = ({initialData}:Props)=>{
+
+// }
+
+const EmployerSettingForm = ({
+  initialData,
+}: {
+  initialData?: Partial<EmployerProfileData>;
+}) => {
   const {
     register,
     handleSubmit,
@@ -39,6 +51,16 @@ const EmployerSettingForm = () => {
     control,
     formState: { errors },
   } = useForm<EmployerProfileData>({
+    defaultValues: {
+      name: initialData?.name || "",
+      description: initialData?.description || "",
+      organizationType: initialData?.organizationType || undefined,
+      teamSize: initialData?.teamSize || undefined,
+      yearOfEstablishment: initialData?.yearOfEstablishment,
+      websiteUrl: initialData?.websiteUrl || "",
+      location: initialData?.location || "",
+      avatarUrl: initialData?.avatarUrl || "",
+    },
     resolver: zodResolver(employerProfileSchema),
   });
 

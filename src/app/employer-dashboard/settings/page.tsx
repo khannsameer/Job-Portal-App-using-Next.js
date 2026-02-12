@@ -1,9 +1,34 @@
 import EmployerSettingForm from "@/features/employers/components/employer-setting-form";
+import { EmployerProfileData } from "@/features/employers/employers.schema";
+import { getCurrentEmployerDetails } from "@/features/servers/employers.queries";
+import { redirect } from "next/navigation";
 
-const EmployerSettings = () => {
+const EmployerSettings = async () => {
+  const currentEmployer = await getCurrentEmployerDetails();
+  if (!currentEmployer) return redirect("/login");
+
+  console.log("Current Employer:", currentEmployer);
+
   return (
     <div>
-      <EmployerSettingForm />
+      <EmployerSettingForm
+        initialData={{
+          name: currentEmployer.employerDetails?.name ?? "",
+          description: currentEmployer.employerDetails?.description ?? "",
+          organizationType: currentEmployer.employerDetails
+            ?.organizationType as
+            | EmployerProfileData["organizationType"]
+            | undefined,
+          teamSize: currentEmployer.employerDetails?.teamSize as
+            | EmployerProfileData["teamSize"]
+            | undefined,
+          location: currentEmployer.employerDetails?.location ?? "",
+          websiteUrl: currentEmployer.employerDetails?.websiteUrl ?? "",
+          yearOfEstablishment:
+            currentEmployer.employerDetails?.yearOfEstablishment?.toString() ??
+            "",
+        }}
+      />
     </div>
   );
 };
