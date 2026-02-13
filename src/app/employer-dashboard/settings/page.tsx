@@ -17,13 +17,11 @@ const EmployerSettings = async () => {
         initialData={{
           name: currentEmployer.employerDetails?.name ?? "",
           description: currentEmployer.employerDetails?.description ?? "",
-          organizationType: currentEmployer.employerDetails
-            ?.organizationType as
-            | EmployerProfileData["organizationType"]
-            | undefined,
-          teamSize: currentEmployer.employerDetails?.teamSize as
-            | EmployerProfileData["teamSize"]
-            | undefined,
+          organizationType: (currentEmployer.employerDetails
+            ?.organizationType ??
+            "") as EmployerProfileData["organizationType"],
+          teamSize: (currentEmployer.employerDetails?.teamSize ??
+            "") as EmployerProfileData["teamSize"],
           location: currentEmployer.employerDetails?.location ?? "",
           websiteUrl: currentEmployer.employerDetails?.websiteUrl ?? "",
           yearOfEstablishment:

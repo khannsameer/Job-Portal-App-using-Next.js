@@ -14,6 +14,8 @@ import { redirect } from "next/navigation";
 
 const EmployerProfileCompletionStatus = async () => {
   const currentEmployer = await getCurrentEmployerDetails();
+  console.log("current employer::", currentEmployer);
+
   if (!currentEmployer) return redirect("/login");
   if (currentEmployer.isProfileCompleted) return null;
 

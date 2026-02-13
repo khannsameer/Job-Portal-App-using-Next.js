@@ -44,11 +44,17 @@ export const employerProfileSchema = z.object({
     .min(10, "Description must be at least 10 characters long")
     .max(2000, "Description must not exceed 2000 characters"),
 
-  organizationType: z.enum(organizationTypes, {
-    error: "Please select a valid organization type",
-  }),
+  organizationType: z
+    .enum(organizationTypes, {
+      error: "Please select a valid organization type",
+    })
+    .or(z.literal("")),
 
-  teamSize: z.enum(teamSizes, { error: "Please select a valid team size" }),
+  teamSize: z
+    .enum(teamSizes, {
+      error: "Please select a valid team size",
+    })
+    .or(z.literal("")),
 
   yearOfEstablishment: z
     .string()
@@ -77,9 +83,9 @@ export const employerProfileSchema = z.object({
     .string()
     .trim()
     .min(2, "Location must be at least 2 characters long")
-    .max(255, "Location must not exceed 255 characters"),
-  // .optional()
-  // .or(z.literal("")),
+    .max(255, "Location must not exceed 255 characters")
+    .optional()
+    .or(z.literal("")),
 
   avatarUrl: z.url("Please upload the image"),
 });

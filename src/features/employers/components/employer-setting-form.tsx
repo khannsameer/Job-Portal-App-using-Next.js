@@ -32,6 +32,18 @@ import {
 } from "../employers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+interface IFormInput {
+  username: string;
+  email: string;
+  name: string;
+  description: string;
+  yearOfEstablishment: string;
+  organizationType: string;
+  teamSize: string;
+  websiteUrl: string;
+  location: string;
+}
+
 const EmployerSettingForm = ({
   initialData,
 }: {
@@ -43,22 +55,22 @@ const EmployerSettingForm = ({
     watch,
     control,
     formState: { errors, isDirty, isSubmitting },
-  } = useForm<EmployerProfileData>({
-    defaultValues: {
-      name: initialData?.name || "",
-      description: initialData?.description || "",
-      organizationType: initialData?.organizationType || undefined,
-      teamSize: initialData?.teamSize || undefined,
-      yearOfEstablishment: initialData?.yearOfEstablishment,
-      websiteUrl: initialData?.websiteUrl || "",
-      location: initialData?.location || "",
-      avatarUrl: initialData?.avatarUrl || "",
-    },
-    resolver: zodResolver(employerProfileSchema),
+  } = useForm<IFormInput>({
+    // defaultValues: {
+    //   name: initialData?.name || "",
+    //   description: initialData?.description || "",
+    //   organizationType: initialData?.organizationType ?? "",
+    //   teamSize: initialData?.teamSize ?? "",
+    //   yearOfEstablishment: initialData?.yearOfEstablishment || "",
+    //   websiteUrl: initialData?.websiteUrl || "",
+    //   location: initialData?.location || "",
+    //   avatarUrl: initialData?.avatarUrl || "",
+    // },
+    // resolver: zodResolver(employerProfileSchema),
   });
 
-  const handleFormSubmit = async (data: EmployerProfileData) => {
-    console.log(data);
+  const handleFormSubmit = async (data: IFormInput) => {
+    console.log("data:::", data);
     const response = await updateEmployerProfileAction(data);
     if (response.status === "SUCCESS") {
       toast.success(response.message);
@@ -119,7 +131,10 @@ const EmployerSettingForm = ({
                 render={({ field }) => (
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      value={field.value ?? ""}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger
                         className={`pl-10 w-full ${errors.organizationType ? "border-destructive" : ""}`}
                       >
@@ -153,7 +168,10 @@ const EmployerSettingForm = ({
                 render={({ field }) => (
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground Z-10" />
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      value={field.value ?? ""}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger
                         className={`pl-10 w-full ${errors.teamSize ? "border-destructive" : ""}`}
                       >

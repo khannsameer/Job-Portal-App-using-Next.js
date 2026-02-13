@@ -3,14 +3,23 @@
 import { db } from "@/config/db";
 import { getCurrentUser } from "../server/auth.queries";
 import { employers } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
 import { EmployerProfileData } from "../employers/employers.schema";
+import { eq } from "drizzle-orm";
 
-export const updateEmployerProfileAction = async (
-  data: EmployerProfileData,
-) => {
+interface IFormInput {
+  username: string;
+  email: string;
+  name: string;
+  description: string;
+  yearOfEstablishment: string;
+  organizationType: string;
+  teamSize: string;
+  websiteUrl: string;
+  location: string;
+}
+
+export async function updateEmployerProfileAction(data: IFormInput) {
   try {
-    console.log("ACTION TRIGGERED");
     const currentUser = await getCurrentUser();
     console.log("Current User:", currentUser);
     if (!currentUser || currentUser.role !== "employer") {
@@ -50,4 +59,4 @@ export const updateEmployerProfileAction = async (
       message: "Something went wrong, Please try again",
     };
   }
-};
+}
