@@ -32,18 +32,6 @@ import {
 } from "../employers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface IFormInput {
-  username: string;
-  email: string;
-  name: string;
-  description: string;
-  yearOfEstablishment: string;
-  organizationType: string;
-  teamSize: string;
-  websiteUrl: string;
-  location: string;
-}
-
 const EmployerSettingForm = ({
   initialData,
 }: {
@@ -55,21 +43,21 @@ const EmployerSettingForm = ({
     watch,
     control,
     formState: { errors, isDirty, isSubmitting },
-  } = useForm<IFormInput>({
-    // defaultValues: {
-    //   name: initialData?.name || "",
-    //   description: initialData?.description || "",
-    //   organizationType: initialData?.organizationType ?? "",
-    //   teamSize: initialData?.teamSize ?? "",
-    //   yearOfEstablishment: initialData?.yearOfEstablishment || "",
-    //   websiteUrl: initialData?.websiteUrl || "",
-    //   location: initialData?.location || "",
-    //   avatarUrl: initialData?.avatarUrl || "",
-    // },
-    // resolver: zodResolver(employerProfileSchema),
+  } = useForm<EmployerProfileData>({
+    defaultValues: {
+      name: initialData?.name || "",
+      description: initialData?.description || "",
+      organizationType: initialData?.organizationType ?? "",
+      teamSize: initialData?.teamSize ?? "",
+      yearOfEstablishment: initialData?.yearOfEstablishment || "",
+      websiteUrl: initialData?.websiteUrl || "",
+      location: initialData?.location || "",
+      // avatarUrl: initialData?.avatarUrl || "",
+    },
+    resolver: zodResolver(employerProfileSchema),
   });
 
-  const handleFormSubmit = async (data: IFormInput) => {
+  const handleFormSubmit = async (data: EmployerProfileData) => {
     console.log("data:::", data);
     const response = await updateEmployerProfileAction(data);
     if (response.status === "SUCCESS") {

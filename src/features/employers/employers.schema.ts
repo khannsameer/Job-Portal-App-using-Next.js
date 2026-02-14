@@ -87,7 +87,7 @@ export const employerProfileSchema = z.object({
     .optional()
     .or(z.literal("")),
 
-  avatarUrl: z.url("Please upload the image"),
+  // avatarUrl: z.url("Please upload the image"),
 });
 
 export type EmployerProfileData = z.infer<typeof employerProfileSchema>;

@@ -6,19 +6,7 @@ import { employers } from "@/drizzle/schema";
 import { EmployerProfileData } from "../employers/employers.schema";
 import { eq } from "drizzle-orm";
 
-interface IFormInput {
-  username: string;
-  email: string;
-  name: string;
-  description: string;
-  yearOfEstablishment: string;
-  organizationType: string;
-  teamSize: string;
-  websiteUrl: string;
-  location: string;
-}
-
-export async function updateEmployerProfileAction(data: IFormInput) {
+export async function updateEmployerProfileAction(data: EmployerProfileData) {
   try {
     const currentUser = await getCurrentUser();
     console.log("Current User:", currentUser);
@@ -41,16 +29,17 @@ export async function updateEmployerProfileAction(data: IFormInput) {
       .set({
         name,
         description,
-        yearOfEstablishment: yearOfEstablishment
-          ? parseInt(yearOfEstablishment)
-          : null,
         location,
         websiteUrl,
         organizationType,
         teamSize,
+        yearOfEstablishment: yearOfEstablishment
+          ? parseInt(yearOfEstablishment)
+          : null,
       })
       .where(eq(employers.id, currentUser.id));
-    console.log("employers", updatedEmployer);
+
+    console.log("Updated Row:", updatedEmployer);
 
     return { status: "SUCCESS", message: "Profile update successfully" };
   } catch (error) {
