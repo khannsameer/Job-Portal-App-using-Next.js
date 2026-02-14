@@ -31,6 +31,7 @@ import {
   teamSizes,
 } from "../employers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Tiptap from "@/components/text-editor";
 
 const EmployerSettingForm = ({
   initialData,
@@ -91,21 +92,22 @@ const EmployerSettingForm = ({
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Company Description *</Label>
-            <div className="relative">
-              <FileText className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-              <Textarea
-                id="description"
-                placeholder="Tell us about your company, what you do, and your mission ... "
-                className={`pl-10 min-h-30 resize-none ${errors.description ? "border-destructive" : ""}`}
-                {...register("description")}
-              />
-            </div>
-            {errors.description && (
-              <p className="text-sm text-destructive">
-                {errors.description.message}
-              </p>
-            )}
+            <Controller
+              name="description"
+              control={control}
+              render={({ field, fieldState }) => (
+                <div className="space-y-2">
+                  <Label>Description *</Label>
+                  <Tiptap content={field.value} onChange={field.onChange} />
+
+                  {fieldState.error && (
+                    <p className="text-sm text-destructive">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
           </div>
 
           {/* Organization Type and Team size */}
