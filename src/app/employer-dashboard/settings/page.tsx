@@ -27,6 +27,7 @@ const EmployerSettings = async () => {
           yearOfEstablishment:
             currentEmployer.employerDetails?.yearOfEstablishment?.toString() ??
             "",
+          avatarUrl: currentEmployer.avatarUrl ?? "",
         }}
       />
     </div>

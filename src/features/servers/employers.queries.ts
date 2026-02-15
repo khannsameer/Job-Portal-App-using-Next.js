@@ -28,6 +28,7 @@ export const getCurrentEmployerDetails = async () => {
   const isProfileCompleted = Boolean(
     employer?.name?.trim() &&
     employer?.description?.trim() &&
+    currentUser?.avatarUrl &&
     employer?.organizationType &&
     employer?.yearOfEstablishment !== null,
   );

@@ -21,6 +21,7 @@ import {
   Globe,
   Loader,
   MapPin,
+  X,
 } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,6 +33,8 @@ import {
 } from "../employers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Tiptap from "@/components/text-editor";
+import { UploadButton } from "@/lib/uploadthing";
+import Image from "next/image";
 
 const EmployerSettingForm = ({
   initialData,
@@ -41,7 +44,8 @@ const EmployerSettingForm = ({
   const {
     register,
     handleSubmit,
-    watch,
+    setValue,
+    watch, //Give me the current value of this field in the form state, and re-render this component when it changes.
     control,
     formState: { errors, isDirty, isSubmitting },
   } = useForm<EmployerProfileData>({
@@ -53,10 +57,20 @@ const EmployerSettingForm = ({
       yearOfEstablishment: initialData?.yearOfEstablishment || "",
       websiteUrl: initialData?.websiteUrl || "",
       location: initialData?.location || "",
-      // avatarUrl: initialData?.avatarUrl || "",
+      avatarUrl: initialData?.avatarUrl || "",
     },
     resolver: zodResolver(employerProfileSchema),
   });
+
+  const avatarUrl = watch("avatarUrl");
+
+  const handleRemoveAvatar = () => {
+    setValue("avatarUrl", "", {
+      //Programmatically update a form field's value inside react-hook-form.
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
 
   const handleFormSubmit = async (data: EmployerProfileData) => {
     console.log("data:::", data);
@@ -72,6 +86,51 @@ const EmployerSettingForm = ({
     <Card className="w-3/4">
       <CardContent>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+          <div>
+            <Label>Company Logo</Label>
+            {avatarUrl ? (
+              <div className="flex items-center gap-4">
+                <div className="relative w-24 h-24 rounded-lg overflow-hidden border-2 border-border">
+                  <Image
+                    src={avatarUrl}
+                    alt="Company logo"
+                    className="w-full h-full object-cover"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleRemoveAvatar}
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Remove Logo
+                </Button>
+              </div>
+            ) : (
+              <UploadButton
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  const uploadedFile = res[0];
+
+                  // console.log("Files:", uploadedFile);
+
+                  // ✅ use ufsUrl instead of appUrl
+                  setValue("avatarUrl", uploadedFile.ufsUrl, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                  console.log("Files::", res);
+                  // alert("Upload Completed");
+                }}
+                onUploadError={(error: Error) => {
+                  toast.error(`Upload failed! ${error.message}`);
+                }}
+              />
+            )}
+          </div>
           {/* Company Name */}
           <div className="space-y-2">
             <Label htmlFor="companyName">Company Name *</Label>
