@@ -16,7 +16,6 @@ import {
   Briefcase,
   Building2,
   Calendar,
-  FileText,
   Globe,
   Loader,
   Loader2,
@@ -34,7 +33,7 @@ import {
 } from "../employers.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Tiptap from "@/components/text-editor";
-import { UploadButton, useUploadThing } from "@/lib/uploadthing";
+import { useUploadThing } from "@/lib/uploadthing";
 import Image from "next/image";
 import { ComponentProps, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -48,7 +47,6 @@ const EmployerSettingForm = ({
   const {
     register,
     handleSubmit,
-    setValue,
     watch, //Give me the current value of this field in the form state, and re-render this component when it changes.
     control,
     formState: { errors, isDirty, isSubmitting },
@@ -62,19 +60,10 @@ const EmployerSettingForm = ({
       websiteUrl: initialData?.websiteUrl || "",
       location: initialData?.location || "",
       avatarUrl: initialData?.avatarUrl || "",
+      bannerImageUrl: initialData?.bannerImageUrl || "",
     },
     resolver: zodResolver(employerProfileSchema),
   });
-
-  const avatarUrl = watch("avatarUrl");
-
-  const handleRemoveAvatar = () => {
-    setValue("avatarUrl", "", {
-      //Programmatically update a form field's value inside react-hook-form.
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  };
 
   const handleFormSubmit = async (data: EmployerProfileData) => {
     console.log("data:::", data);
@@ -108,6 +97,33 @@ const EmployerSettingForm = ({
                       fieldState.error &&
                         "ring-1 ring-destructive/50 rounded-lg",
                       "h-64 w-64",
+                    )}
+                  />
+                  {fieldState.error && (
+                    <p className="text-sm text-destructive">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="bannerImageUrl"
+              control={control}
+              render={({ field, fieldState }) => (
+                <div className="space-y-2">
+                  <Label>Banner Image</Label>
+                  <ImageUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                    boxText={
+                      "Banner images optimal dimension 1520×400. Supported format JPEG, PNG. Max photo size 5 MB."
+                    }
+                    className={cn(
+                      fieldState.error &&
+                        "ring-1 ring-destructive/50 rounded-lg",
+                      "h-64 w-full",
                     )}
                   />
                   {fieldState.error && (
