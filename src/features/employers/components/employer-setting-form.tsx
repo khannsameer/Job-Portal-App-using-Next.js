@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { updateEmployerProfileAction } from "@/features/servers/employer.action";
 import {
   Briefcase,
