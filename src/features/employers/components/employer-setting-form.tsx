@@ -66,7 +66,7 @@ const EmployerSettingForm = ({
   });
 
   const handleFormSubmit = async (data: EmployerProfileData) => {
-    console.log("data:::", data);
+    // console.log("data:::", data);
     const response = await updateEmployerProfileAction(data);
     if (response.status === "SUCCESS") {
       toast.success(response.message);

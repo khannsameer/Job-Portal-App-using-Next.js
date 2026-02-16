@@ -9,7 +9,7 @@ import { eq } from "drizzle-orm";
 export async function updateEmployerProfileAction(data: EmployerProfileData) {
   try {
     const currentUser = await getCurrentUser();
-    console.log("Current User:", currentUser);
+    // console.log("Current User:", currentUser);
     if (!currentUser || currentUser.role !== "employer") {
       return { status: "ERROR", message: "Unauthorized" };
     }
