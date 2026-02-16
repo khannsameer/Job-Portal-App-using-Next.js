@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { EmployerJobCard } from "./employer-job-card";
-
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Job } from "../jobs/types/job.types";
@@ -53,8 +52,13 @@ export const EmployerJobList = () => {
     }
   };
 
-  const handleEdit = async (jobId: number) => {
-    router.push(`/employer-dashboard/jobs/${jobId}/edit`);
+  const handleEdit = async (jobId: number | undefined) => {
+    if (!jobId) {
+      console.error("Invalid jobId passed to edit");
+      return;
+    }
+
+    router.push(`/employer-dashboard/jobslist/${jobId}/edit`);
   };
 
   if (isLoading) {

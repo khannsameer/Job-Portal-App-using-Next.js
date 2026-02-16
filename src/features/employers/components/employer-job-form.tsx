@@ -36,11 +36,12 @@ import Tiptap from "@/components/text-editor";
 import { JobFormData, jobSchema } from "../jobs/jobs.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+
+import { useRouter } from "next/navigation";
 import {
   createJobAction,
   updateJobAction,
 } from "@/features/servers/jobs.actions";
-import { useRouter } from "next/navigation";
 
 interface JobPostFormProps {
   initialData?: any; // The job data fetched from DB
