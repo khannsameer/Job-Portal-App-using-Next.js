@@ -28,7 +28,7 @@ const navigationItems: NavigationItem[] = [
   { name: "Overview", icon: LayoutDashboard, href: base + "/" },
   { name: "Employers Profile", icon: User, href: base + "/profile" },
   { name: "Post a Job", icon: Plus, href: base + "/jobs" },
-  { name: "My Jobs", icon: Briefcase, href: base + "/my-jobs" },
+  { name: "My Jobs", icon: Briefcase, href: base + "/jobslist" },
   { name: "Saved Candidate", icon: Bookmark, href: base + "/saved" },
   { name: "Plans & Billing", icon: CreditCard, href: base + "/billing" },
   { name: "All Companies", icon: Building, href: base + "/companies" },
