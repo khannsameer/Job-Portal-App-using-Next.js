@@ -40,15 +40,16 @@ const EmployerSidebar = () => {
   // console.log("pathname", pathname);
 
   function isLinkActive(href: string) {
-    if (!href) return false;
-
+    const normalizedPathname = pathname.replace(/\/$/, "");
     const normalizedHref = href.replace(/\/$/, "");
 
+    // Overview (base route) → exact match only
     if (normalizedHref === base) {
-      return pathname === base;
+      return normalizedPathname === base;
     }
 
-    return pathname.startsWith(normalizedHref);
+    // All other routes → exact match only
+    return normalizedPathname === normalizedHref;
   }
 
   return (
