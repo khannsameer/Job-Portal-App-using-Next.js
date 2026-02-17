@@ -57,7 +57,6 @@ export const EmployerJobList = () => {
       console.error("Invalid jobId passed to edit");
       return;
     }
-
     router.push(`/employer-dashboard/jobslist/${jobId}/edit`);
   };
 
