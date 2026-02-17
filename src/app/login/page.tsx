@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -18,7 +18,6 @@ import { loginUserAction } from "./loginUserAction.action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserData, loginUserSchema } from "@/features/auth/auth.schema";
-import { useRouter } from "next/navigation";
 
 const LoginForm: React.FC = () => {
   const {

@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 
 export const getCurrentEmployerDetails = async () => {
   const currentUser = await getCurrentUser();
-  console.log("current users::", currentUser);
+  // console.log("current users::", currentUser);
 
   if (!currentUser) return null;
   if (currentUser.role !== "employer") return null;
@@ -15,7 +15,7 @@ export const getCurrentEmployerDetails = async () => {
     .from(employers)
     .where(eq(employers.id, currentUser.id));
 
-  console.log("Employer:::", employer);
+  // console.log("Employer:::", employer);
 
   // if (!employer) {
   //   return {

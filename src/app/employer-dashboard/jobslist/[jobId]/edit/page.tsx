@@ -19,7 +19,7 @@ export default async function EditJobPage({
 
   // Fetch job data
   const { status, data: job } = await getJobByIdAction(numericJobId);
-  console.log("Job data after id:::", job);
+  // console.log("Job data after id:::", job);
 
   // If job doesn't exist → redirect
   if (status === "ERROR" || !job) {
