@@ -1,10 +1,9 @@
 import { logoutUserAction } from "@/features/server/auth.actions";
-import React from "react";
 
-const ApplicantDashboard = () => {
+const ApplicantDashboard = async () => {
   return (
     <div>
-      <h1>applicant</h1>
+      <h1>Hello Applicant</h1>
       <button onClick={logoutUserAction}>Logout</button>
     </div>
   );

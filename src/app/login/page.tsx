@@ -18,6 +18,7 @@ import { loginUserAction } from "./loginUserAction.action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserData, loginUserSchema } from "@/features/auth/auth.schema";
+import Router from "next/router";
 
 const LoginForm: React.FC = () => {
   const {
@@ -41,9 +42,9 @@ const LoginForm: React.FC = () => {
       const result = await loginUserAction(data);
 
       // if (result.status === "SUCCESS") {
-      //   if (data. === "employer") router.push("/employer-dashboard");
+      //   if (result.role === "employer") Router.push("/employer-dashboard");
       //   else {
-      //     router.push("/applicant-dashboard");
+      //     Router.push("/applicant-dashboard");
       //   }
       // }
 

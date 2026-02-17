@@ -30,7 +30,7 @@ export const loginUserAction = async (LoginData: LoginData) => {
 
     await createSessionAndSetCookies(user.id);
 
-    return { status: "SUCCESS", message: "Login Successful" };
+    return { status: "SUCCESS", message: "Login Successful", role: user.role };
   } catch (error) {
     return {
       status: "ERROR",
