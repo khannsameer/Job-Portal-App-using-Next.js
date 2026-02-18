@@ -1,3 +1,13 @@
+import {
+  Bookmark,
+  Briefcase,
+  LayoutDashboard,
+  LucideIcon,
+  Plus,
+  Search,
+  Settings,
+} from "lucide-react";
+
 export const SESSION_LIFETIME = 30 * 24 * 60 * 60;
 export const SESSION_REFRESH_TIME = SESSION_LIFETIME / 2;
 
@@ -43,3 +53,72 @@ export const MIN_EDUCATION = [
   "masters",
   "phd",
 ] as const;
+
+export interface NavItem {
+  name: string;
+  href: string;
+  icon: LucideIcon;
+  exact?: boolean;
+  badge?: number | "dynamic";
+}
+
+// APPLICANT DASHBOARD NAVIGATION
+/**
+ * Applicant Dashboard Navigation Items
+ * Based on folder structure: app/(applicants)/dashboard/
+ */
+export const applicantNavItems: NavItem[] = [
+  {
+    name: "Home",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    exact: true, // Exact match only for home
+  },
+  {
+    name: "Find Jobs",
+    href: "/dashboard/jobs",
+    icon: Search,
+  },
+  {
+    name: "Applied",
+    href: "/dashboard/applications",
+    icon: Briefcase,
+    badge: "dynamic", // Will show count of applied jobs
+  },
+  {
+    name: "Saved Jobs",
+    href: "/dashboard/saved-jobs",
+    icon: Bookmark,
+    badge: "dynamic", // Will show count of saved jobs
+  },
+  {
+    name: "Settings",
+    href: "/dashboard/settings",
+    icon: Settings,
+  },
+];
+
+export const employerNavItems: NavItem[] = [
+  {
+    name: "Dashboard",
+    href: "/employer-dashboard",
+    icon: LayoutDashboard,
+    exact: true, // Exact match for dashboard home
+  },
+  {
+    name: "Create Job",
+    href: "/employer-dashboard/jobs/create",
+    icon: Plus,
+  },
+  {
+    name: "My Jobs",
+    href: "/employer-dashboard/jobs",
+    icon: Briefcase,
+    // Note: /jobs exact match chahiye but /jobs/[jobId]/edit allow karna hai
+  },
+  {
+    name: "Settings",
+    href: "/employer-dashboard/settings",
+    icon: Settings,
+  },
+];
