@@ -1,7 +1,6 @@
 import { db } from "@/config/db";
 import { jobs, employers, users } from "@/drizzle/schema";
 import { eq, and, isNull, desc, or, gte, SQL, like } from "drizzle-orm";
-import { JobLevel } from "../types/job.types";
 
 // 2. Define the Interface
 export interface JobFilterParams {
