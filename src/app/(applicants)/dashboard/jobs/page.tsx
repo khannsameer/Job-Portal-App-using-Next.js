@@ -12,7 +12,7 @@ interface PageProps {
 export default async function JobsPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
 
-  console.log("resolvedParams: ", resolvedParams);
+  //   console.log("resolvedParams: ", resolvedParams);
 
   const filters: JobFilterParams = {
     search:

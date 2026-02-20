@@ -17,8 +17,8 @@ import { JOB_TYPE, WORK_TYPE, JOB_LEVEL } from "@/config/constant";
 export const JobFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  console.log("searchParams: ", searchParams);
-  console.log("searchParams string: ", searchParams.toString());
+  //   console.log("searchParams: ", searchParams);
+  //   console.log("searchParams string: ", searchParams.toString());
 
   // Local state for immediate UI feedback
   const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -36,7 +36,7 @@ export const JobFilters = () => {
 
   const updateFilters = (newParams: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
-    console.log("params: ", params);
+    // console.log("params: ", params);
 
     Object.entries(newParams).forEach(([key, value]) => {
       const actualValue = value?.trim();

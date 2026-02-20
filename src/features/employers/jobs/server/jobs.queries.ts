@@ -11,7 +11,7 @@ export interface JobFilterParams {
 }
 
 export async function getAllJobs(filters: JobFilterParams) {
-  console.log("filers real: ", filters);
+  //   console.log("filers real: ", filters);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Reset time to 00:00:00
@@ -83,7 +83,7 @@ export async function getAllJobs(filters: JobFilterParams) {
   return jobsData;
 }
 
-// 🪄 AUTOMATIC TYPE EXPORT
+//  AUTOMATIC TYPE EXPORT
 // This creates a type based on EXACTLY what getAllJobs returns.
 // If you add a field above, this type updates automatically.
 export type JobCardType = Awaited<ReturnType<typeof getAllJobs>>[number];
@@ -129,7 +129,7 @@ export async function getJobById(jobId: number) {
     .from(jobs)
     .innerJoin(employers, eq(jobs.employerId, employers.id))
     .innerJoin(users, eq(employers.id, users.id))
-    .where(eq(jobs.id, jobId)) // 🎯 Filter by the specific ID
+    .where(eq(jobs.id, jobId)) //  Filter by the specific ID
     .limit(1); // We only want one result
 
   // Return the first item (or undefined if not found)
