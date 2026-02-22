@@ -41,6 +41,7 @@ import {
   applicantSettingsSchema,
   ApplicantSettingsSchema,
 } from "../applicant-schema";
+import { ResumeUpload } from "./resume-upload";
 
 const ApplicantSettingsForm = () => {
   const {
@@ -59,17 +60,17 @@ const ApplicantSettingsForm = () => {
   const onSubmit = async (data: ApplicantSettingsSchema) => {
     console.log("Saving Data:", data);
 
-    try {
-      const res = await createApplicantProfile(data);
-      if (res.status === "SUCCESS") {
-        toast.success(res.message);
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-      console.error("Form Submission Error:", error);
-    }
+    // try {
+    //   const res = await createApplicantProfile(data);
+    //   if (res.status === "SUCCESS") {
+    //     toast.success(res.message);
+    //   } else {
+    //     toast.error(res.message);
+    //   }
+    // } catch (error) {
+    //   toast.error("Something went wrong. Please try again.");
+    //   console.error("Form Submission Error:", error);
+    // }
   };
 
   return (
