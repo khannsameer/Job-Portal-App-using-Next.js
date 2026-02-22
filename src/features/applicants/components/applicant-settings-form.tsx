@@ -12,7 +12,6 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -42,6 +41,7 @@ import {
   ApplicantSettingsSchema,
 } from "../applicant-schema";
 import { ResumeUpload } from "./resume-upload";
+import { createApplicantProfile } from "../actions/applicant.action";
 
 const ApplicantSettingsForm = () => {
   const {
@@ -58,19 +58,19 @@ const ApplicantSettingsForm = () => {
   });
 
   const onSubmit = async (data: ApplicantSettingsSchema) => {
-    console.log("Saving Data:", data);
+    // console.log("Saving Data:", data);
 
-    // try {
-    //   const res = await createApplicantProfile(data);
-    //   if (res.status === "SUCCESS") {
-    //     toast.success(res.message);
-    //   } else {
-    //     toast.error(res.message);
-    //   }
-    // } catch (error) {
-    //   toast.error("Something went wrong. Please try again.");
-    //   console.error("Form Submission Error:", error);
-    // }
+    try {
+      const res = await createApplicantProfile(data);
+      if (res.status === "SUCCESS") {
+        toast.success(res.message);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.error("Form Submission Error:", error);
+    }
   };
 
   return (
@@ -236,7 +236,10 @@ const ApplicantSettingsForm = () => {
                 name="gender"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value || ""}
+                  >
                     <SelectTrigger
                       className={
                         errors.gender
@@ -267,7 +270,10 @@ const ApplicantSettingsForm = () => {
                 name="maritalStatus"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value || ""}
+                  >
                     <SelectTrigger
                       className={
                         errors.maritalStatus
@@ -309,7 +315,10 @@ const ApplicantSettingsForm = () => {
                   name="education"
                   control={control}
                   render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || ""}
+                    >
                       <SelectTrigger
                         className={
                           errors.education

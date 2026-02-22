@@ -10,7 +10,7 @@ import { isActiveLink } from "@/lib/navigation-uitls";
 
 const ApplicantSidebar = () => {
   const pathname = usePathname();
-  console.log("pathname: ", pathname);
+  // console.log("pathname: ", pathname);
 
   return (
     <div className="w-64 bg-card border-r border-border fixed bottom-0 top-0">
@@ -25,7 +25,7 @@ const ApplicantSidebar = () => {
           const Icon = item.icon;
           const active = isActiveLink(pathname, item.href, item.exact);
 
-          console.log("pathname:   item.href ", item.href);
+          // console.log("pathname:   item.href ", item.href);
 
           return (
             <Link

@@ -7,7 +7,7 @@ export default async function EditJobPage({
 }: {
   params: Promise<{ jobId: string }>;
 }) {
-  // ✅ unwrap params (Next.js 15+ requirement)
+  //  unwrap params (Next.js 15+ requirement)
   const { jobId } = await params;
 
   const numericJobId = Number(jobId);

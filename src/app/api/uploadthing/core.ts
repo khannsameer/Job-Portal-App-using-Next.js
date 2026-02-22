@@ -52,8 +52,8 @@ export const ourFileRouter = {
       return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("PDF Upload complete for userId:", metadata.userId);
-      console.log("PDF file url", file.ufsUrl); // Note: file.url or file.ufsUrl depending on version
+      // console.log("PDF Upload complete for userId:", metadata.userId);
+      // console.log("PDF file url", file.ufsUrl); // Note: file.url or file.ufsUrl depending on version
       return { uploadBy: metadata.userId };
     }),
 } satisfies FileRouter;
