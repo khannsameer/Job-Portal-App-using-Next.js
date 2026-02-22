@@ -1,8 +1,5 @@
 import { z } from "zod";
 
-const MAX_FILE_SIZE = 5000000; // 5MB
-const ACCEPTED_DOCUMENT_TYPES = ["application/pdf"];
-
 export const GENDER_OPTIONS = ["male", "female", "other"] as const;
 export const MARITAL_STATUS_OPTIONS = [
   "single",
