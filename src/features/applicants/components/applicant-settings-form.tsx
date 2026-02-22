@@ -91,7 +91,7 @@ const ApplicantSettingsForm = () => {
                     name="avatarUrl"
                     control={control}
                     render={({ field, fieldState }) => (
-                      <div>
+                      <div className="space-y-3">
                         <Label>Upload Logo *</Label>
                         <ImageUpload
                           value={field.value}
