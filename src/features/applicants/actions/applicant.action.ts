@@ -11,7 +11,7 @@ import {
 
 export const createApplicantProfile = async (data: ApplicantSettingsSchema) => {
   try {
-    // console.log("data: ", data);
+    console.log("data: ", data);
 
     const user = await getCurrentUser();
     if (!user) return { status: "ERROR", message: "Unauthorized" };
