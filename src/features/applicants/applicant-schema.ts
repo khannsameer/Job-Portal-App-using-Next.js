@@ -1,13 +1,9 @@
 import { z } from "zod";
 
-export const GENDER_OPTIONS = ["male", "female", "other"] as const;
-export const MARITAL_STATUS_OPTIONS = [
-  "single",
-  "married",
-  "divorced",
-] as const;
+const GENDER_OPTIONS = ["male", "female", "other"] as const;
+const MARITAL_STATUS_OPTIONS = ["single", "married", "divorced"] as const;
 
-export const EDUCATION_OPTIONS = [
+const EDUCATION_OPTIONS = [
   "none",
   "high school",
   "undergraduate",

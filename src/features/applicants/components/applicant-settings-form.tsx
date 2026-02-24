@@ -12,6 +12,7 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -32,16 +33,17 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import Tiptap from "@/components/text-editor";
 import { ImageUpload } from "@/features/employers/components/employer-setting-form";
 import { cn } from "@/lib/utils";
+import { ResumeUpload } from "./resume-upload";
+import { createApplicantProfile } from "../actions/applicant.action";
 import { toast } from "sonner";
 import {
   applicantSettingsSchema,
   ApplicantSettingsSchema,
 } from "../applicant-schema";
-import { ResumeUpload } from "./resume-upload";
-import { createApplicantProfile } from "../actions/applicant.action";
 
 const ApplicantSettingsForm = () => {
   const {
@@ -53,12 +55,24 @@ const ApplicantSettingsForm = () => {
   } = useForm<ApplicantSettingsSchema>({
     resolver: zodResolver(applicantSettingsSchema),
     defaultValues: {
-      email: "example@123gmail.com",
+      email: "example123@gmail.com",
+      biography: "",
+      avatarUrl: "",
+      resumeUrl: "",
+      resumeName: "",
+      resumeSize: 0,
+      dateOfBirth: "",
+      name: "",
+      phoneNumber: "",
+      location: "",
+      nationality: "",
+      experience: "",
+      websiteUrl: "",
     },
   });
 
   const onSubmit = async (data: ApplicantSettingsSchema) => {
-    // console.log("Saving Data:", data);
+    console.log("Saving Data:", data);
 
     try {
       const res = await createApplicantProfile(data);
@@ -238,7 +252,7 @@ const ApplicantSettingsForm = () => {
                 render={({ field }) => (
                   <Select
                     onValueChange={field.onChange}
-                    value={field.value || ""}
+                    value={field.value ?? ""}
                   >
                     <SelectTrigger
                       className={
@@ -272,7 +286,7 @@ const ApplicantSettingsForm = () => {
                 render={({ field }) => (
                   <Select
                     onValueChange={field.onChange}
-                    value={field.value || ""}
+                    value={field.value ?? ""}
                   >
                     <SelectTrigger
                       className={
@@ -317,7 +331,7 @@ const ApplicantSettingsForm = () => {
                   render={({ field }) => (
                     <Select
                       onValueChange={field.onChange}
-                      value={field.value || ""}
+                      value={field.value ?? ""}
                     >
                       <SelectTrigger
                         className={

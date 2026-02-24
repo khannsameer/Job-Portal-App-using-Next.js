@@ -17,6 +17,7 @@ import {
   year,
   date,
   boolean,
+  datetime,
 } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
@@ -127,7 +128,7 @@ export const resumes = mysqlTable("resumes", {
   isPrimary: boolean("is_primary").default(false),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });
 
 //! resume realtion
