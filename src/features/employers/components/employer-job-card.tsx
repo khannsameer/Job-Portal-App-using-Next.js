@@ -30,9 +30,6 @@ export const EmployerJobCard = ({ job, onDelete, onEdit }: JobCardProps) => {
             >
               <Pencil className="w-4 h-4" />
             </Button>
-            {/* <Button size="icon" variant="ghost" className="text-destructive">
-              <Trash2 className="w-4 h-4" />
-            </Button> */}
 
             {/* Delete with Confirmation */}
             <AlertDialog>

@@ -33,8 +33,6 @@ const LoginForm: React.FC = () => {
     reValidateMode: "onChange",
   });
 
-  // const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: LoginUserData) => {
