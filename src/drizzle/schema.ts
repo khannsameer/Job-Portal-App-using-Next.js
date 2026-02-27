@@ -180,48 +180,38 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 
 export const applications = mysqlTable("applications", {
   id: int("id").autoincrement().primaryKey(),
-
   applicantId: int("applicant_id")
     .notNull()
     .references(() => applicants.id, { onDelete: "cascade" }),
-
   jobId: int("job_id")
     .notNull()
     .references(() => jobs.id, { onDelete: "cascade" }),
-
   status: mysqlEnum("status", [
     "pending",
     "reviewed",
     "shortlisted",
     "rejected",
   ]).default("pending"),
-
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const savedJobs = mysqlTable("saved_jobs", {
   id: int("id").autoincrement().primaryKey(),
-
   applicantId: int("applicant_id")
     .notNull()
     .references(() => applicants.id, { onDelete: "cascade" }),
-
   jobId: int("job_id")
     .notNull()
     .references(() => jobs.id, { onDelete: "cascade" }),
-
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const jobAlerts = mysqlTable("job_alerts", {
   id: int("id").autoincrement().primaryKey(),
-
   userId: int("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-
   keyword: varchar("keyword", { length: 255 }),
   location: varchar("location", { length: 255 }),
-
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
