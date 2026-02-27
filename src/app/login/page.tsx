@@ -18,14 +18,13 @@ import { loginUserAction } from "./loginUserAction.action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserData, loginUserSchema } from "@/features/auth/auth.schema";
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 
 const LoginForm: React.FC = () => {
   const {
     register,
     handleSubmit,
     watch,
-    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginUserSchema),
@@ -35,20 +34,28 @@ const LoginForm: React.FC = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const router = useRouter();
+
   const onSubmit = async (data: LoginUserData) => {
     try {
       const result = await loginUserAction(data);
 
-      // if (result.status === "SUCCESS") {
-      //   if (result.role === "employer") Router.push("/employer-dashboard");
-      //   else {
-      //     Router.push("/applicant-dashboard");
-      //   }
-      // }
+      if (result.status === "SUCCESS") {
+        toast.success(result.message);
 
-      if (result.status === "SUCCESS") toast.success(result.message);
-      else toast.error(result.message);
-    } catch (error) {}
+        if (result.role === "employer") {
+          router.push("/employer-dashboard");
+        } else {
+          router.push("/dashboard");
+        }
+
+        router.refresh(); // important to refresh session state
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   };
 
   return (
