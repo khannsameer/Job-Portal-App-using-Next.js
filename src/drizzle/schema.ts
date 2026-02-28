@@ -178,6 +178,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
+// Stats Table
 export const applications = mysqlTable("applications", {
   id: int("id").autoincrement().primaryKey(),
   applicantId: int("applicant_id")

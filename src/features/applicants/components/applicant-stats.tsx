@@ -9,6 +9,7 @@ interface Props {
 
 export const ApplicantStats = ({ applied, saved, alerts }: Props) => {
   return (
+    // Dynamic
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Applied Jobs */}
       <Card className="bg-blue-50 border-blue-100 shadow-sm">
