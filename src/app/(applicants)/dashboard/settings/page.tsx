@@ -1,8 +1,16 @@
-"use client";
+"use server";
 
 import ApplicantSettingsForm from "@/features/applicants/components/applicant-settings-form";
+import { getApplicantProfileData } from "@/features/applicants/server/applicant.queries";
+import { getCurrentUser } from "@/features/server/auth.queries";
+import { redirect } from "next/navigation";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const user = await getCurrentUser();
+  if (!user) return redirect("/login");
+
+  const initialData = await getApplicantProfileData(user.id);
+
   return (
     <div className="max-w-4xl mx-auto space-y-8 py-8">
       {/* Header */}
@@ -13,7 +21,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <ApplicantSettingsForm />
+      <ApplicantSettingsForm initialData={initialData} />
     </div>
   );
 }

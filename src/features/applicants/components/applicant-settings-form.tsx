@@ -31,9 +31,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import Tiptap from "@/components/text-editor";
 import { ImageUpload } from "@/features/employers/components/employer-setting-form";
 import { cn } from "@/lib/utils";
@@ -44,8 +42,13 @@ import {
   applicantSettingsSchema,
   ApplicantSettingsSchema,
 } from "../applicant-schema";
+import { ApplicantProfileType } from "../server/applicant.queries";
 
-const ApplicantSettingsForm = () => {
+interface ApplicantSettingsFormProps {
+  initialData: ApplicantProfileType | null;
+}
+
+const ApplicantSettingsForm = ({ initialData }: ApplicantSettingsFormProps) => {
   const {
     register,
     handleSubmit,
@@ -54,22 +57,12 @@ const ApplicantSettingsForm = () => {
     formState: { errors, isDirty, isSubmitting },
   } = useForm<ApplicantSettingsSchema>({
     resolver: zodResolver(applicantSettingsSchema),
-    defaultValues: {
-      email: "example123@gmail.com",
-      biography: "",
-      avatarUrl: "",
-      resumeUrl: "",
-      resumeName: "",
-      resumeSize: 0,
-      dateOfBirth: "",
-      name: "",
-      phoneNumber: "",
-      location: "",
-      nationality: "",
-      experience: "",
-      websiteUrl: "",
+    defaultValues: initialData || {
+      email: "", // fallback if no data at all
     },
   });
+
+  const isUpdating = !!initialData?.location;
 
   const onSubmit = async (data: ApplicantSettingsSchema) => {
     console.log("Saving Data:", data);
