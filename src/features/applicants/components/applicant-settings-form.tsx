@@ -36,7 +36,7 @@ import Tiptap from "@/components/text-editor";
 import { ImageUpload } from "@/features/employers/components/employer-setting-form";
 import { cn } from "@/lib/utils";
 import { ResumeUpload } from "./resume-upload";
-import { createApplicantProfile } from "../actions/applicant.action";
+import { saveApplicantProfile } from "../actions/applicant.action";
 import { toast } from "sonner";
 import {
   applicantSettingsSchema,
@@ -68,7 +68,7 @@ const ApplicantSettingsForm = ({ initialData }: ApplicantSettingsFormProps) => {
     console.log("Saving Data:", data);
 
     try {
-      const res = await createApplicantProfile(data);
+      const res = await saveApplicantProfile(data);
       if (res.status === "SUCCESS") {
         toast.success(res.message);
       } else {
@@ -448,9 +448,19 @@ const ApplicantSettingsForm = ({ initialData }: ApplicantSettingsFormProps) => {
 
         {/* Footer Actions */}
         <div className="flex items-center gap-4">
-          <Button type="submit" disabled={isSubmitting} className="min-w-37.5">
+          <Button
+            type="submit"
+            disabled={isSubmitting || !isDirty}
+            className="min-w-37.5"
+          >
             {isSubmitting && <Loader className="w-4 h-4 mr-2 animate-spin" />}
-            {isSubmitting ? "Saving..." : "Save Changes"}
+            {isSubmitting
+              ? isUpdating
+                ? "Updating..."
+                : "Saving..."
+              : isUpdating
+                ? "Update Profile"
+                : "Save Profile"}
           </Button>
 
           {!isDirty && (

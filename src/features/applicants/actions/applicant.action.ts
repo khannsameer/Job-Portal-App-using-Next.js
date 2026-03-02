@@ -9,7 +9,7 @@ import {
 } from "../applicant-schema";
 import { getCurrentUser } from "@/features/server/auth.queries";
 
-export const createApplicantProfile = async (data: ApplicantSettingsSchema) => {
+export const saveApplicantProfile = async (data: ApplicantSettingsSchema) => {
   try {
     // 1️ Check authentication
     const user = await getCurrentUser();
@@ -18,12 +18,12 @@ export const createApplicantProfile = async (data: ApplicantSettingsSchema) => {
     }
 
     // 2️ Validate data using Zod
-    const parsed = applicantSettingsSchema.safeParse(data);
+    const validateData = applicantSettingsSchema.safeParse(data);
 
-    if (!parsed.success) {
+    if (!validateData.success) {
       return {
         status: "ERROR",
-        message: parsed.error.issues[0].message,
+        message: validateData.error.issues[0].message,
       };
     }
 
@@ -43,11 +43,11 @@ export const createApplicantProfile = async (data: ApplicantSettingsSchema) => {
       resumeUrl,
       resumeName,
       resumeSize,
-    } = parsed.data;
+    } = validateData.data;
 
     // 3️ Start Transaction
     await db.transaction(async (tx) => {
-      //  Update users table (always update)
+      //  Update users table (always update since the user must exist to be logged in)
       await tx
         .update(users)
         .set({
