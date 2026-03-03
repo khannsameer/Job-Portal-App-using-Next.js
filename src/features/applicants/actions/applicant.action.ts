@@ -2,29 +2,26 @@
 
 import { db } from "@/config/db";
 import { applicants, resumes, users } from "@/drizzle/schema";
+import { getCurrentUser } from "@/features/server/auth.queries";
 import { eq } from "drizzle-orm";
 import {
-  applicantSettingsSchema,
   ApplicantSettingsSchema,
+  applicantSettingsSchema,
 } from "../applicant-schema";
-import { getCurrentUser } from "@/features/server/auth.queries";
 
 export const saveApplicantProfile = async (data: ApplicantSettingsSchema) => {
   try {
-    // 1️ Check authentication
+    console.log("data: ", data);
+
     const user = await getCurrentUser();
-    if (!user) {
-      return { status: "ERROR", message: "Unauthorized" };
-    }
+    if (!user) return { status: "ERROR", message: "Unauthorized" };
 
-    // 2️ Validate data using Zod
-    const validateData = applicantSettingsSchema.safeParse(data);
+    const { data: validatedData, error } =
+      applicantSettingsSchema.safeParse(data);
 
-    if (!validateData.success) {
-      return {
-        status: "ERROR",
-        message: validateData.error.issues[0].message,
-      };
+    if (error) {
+      // Return the very first Zod validation error message
+      return { status: "ERROR", message: error.issues[0].message };
     }
 
     const {
@@ -43,26 +40,22 @@ export const saveApplicantProfile = async (data: ApplicantSettingsSchema) => {
       resumeUrl,
       resumeName,
       resumeSize,
-    } = validateData.data;
+    } = validatedData;
 
-    // 3️ Start Transaction
     await db.transaction(async (tx) => {
-      //  Update users table (always update since the user must exist to be logged in)
+      // 1: update the user's table
       await tx
         .update(users)
         .set({
           name,
           phoneNumber,
           avatarUrl,
-          updatedAt: new Date(),
         })
         .where(eq(users.id, user.id));
 
-      //  UPSERT applicants table
       await tx
-        .insert(applicants)
-        .values({
-          id: user.id,
+        .update(applicants)
+        .set({
           location,
           dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
           nationality,
@@ -73,51 +66,20 @@ export const saveApplicantProfile = async (data: ApplicantSettingsSchema) => {
           websiteUrl,
           biography,
         })
-        .onDuplicateKeyUpdate({
-          set: {
-            location,
-            dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
-            nationality,
-            gender,
-            maritalStatus,
-            education,
-            experience,
-            websiteUrl,
-            biography,
-          },
-        });
+        .where(eq(applicants.id, user.id));
 
-      //  UPSERT resume table (if resume exists)
-      if (resumeUrl && resumeName) {
-        await tx
-          .insert(resumes)
-          .values({
-            applicantId: user.id,
-            fileUrl: resumeUrl,
-            fileName: resumeName,
-            fileSize: resumeSize,
-          })
-          .onDuplicateKeyUpdate({
-            set: {
-              fileUrl: resumeUrl,
-              fileName: resumeName,
-              fileSize: resumeSize,
-              updatedAt: new Date(),
-            },
-          });
+      if (resumeName && resumeUrl) {
+        await tx.insert(resumes).values({
+          applicantId: user.id,
+          fileUrl: resumeUrl,
+          fileName: resumeName,
+          fileSize: resumeSize,
+        });
       }
     });
-
-    return {
-      status: "SUCCESS",
-      message: "Profile saved successfully!",
-    };
+    return { status: "SUCCESS", message: "Profile created successfully!" };
   } catch (error) {
-    console.error("CREATE / UPDATE PROFILE ERROR:", error);
-
-    return {
-      status: "ERROR",
-      message: "Failed to save profile. Please try again.",
-    };
+    console.error("CREATE PROFILE ERROR:", error);
+    return { status: "ERROR", message: "Failed to create Profile." };
   }
 };

@@ -36,13 +36,13 @@ import Tiptap from "@/components/text-editor";
 import { ImageUpload } from "@/features/employers/components/employer-setting-form";
 import { cn } from "@/lib/utils";
 import { ResumeUpload } from "./resume-upload";
-import { saveApplicantProfile } from "../actions/applicant.action";
 import { toast } from "sonner";
 import {
   applicantSettingsSchema,
   ApplicantSettingsSchema,
 } from "../applicant-schema";
 import { ApplicantProfileType } from "../server/applicant.queries";
+import { saveApplicantProfile } from "../actions/applicant.action";
 
 interface ApplicantSettingsFormProps {
   initialData: ApplicantProfileType | null;
