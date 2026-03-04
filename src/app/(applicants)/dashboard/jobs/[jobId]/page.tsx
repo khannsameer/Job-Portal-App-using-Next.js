@@ -2,11 +2,15 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { MapPin, Clock, Building2 } from "lucide-react";
-
 import { getJobById } from "@/features/employers/jobs/server/jobs.queries";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import JobOverviewSidebar from "@/features/applicants/jobs/components/jobOverviewSidebar";
+import { getCurrentUser } from "@/features/server/auth.queries";
+import { db } from "@/config/db";
+import { jobApplications, resumes } from "@/drizzle/schema";
+import { and, eq } from "drizzle-orm";
+import Link from "next/link";
 
 interface EditJobPageProps {
   params: Promise<{ jobId: string }>;
@@ -20,10 +24,33 @@ const JobsDetailedPage = async ({ params }: EditJobPageProps) => {
   if (isNaN(parsedJobId)) return notFound();
 
   const job = await getJobById(parsedJobId);
-
-  //   console.log("job: ", job);
-
   if (!job) return notFound();
+
+  // FETCH USER, APPLICATION STATUS, AND RESUMES
+  const user = await getCurrentUser();
+  let hasApplied = false;
+  let userResumes: { id: number; fileName: string }[] = [];
+
+  if (user) {
+    const existingApplication = await db
+      .select()
+      .from(jobApplications)
+      .where(
+        and(
+          eq(jobApplications.jobId, parsedJobId),
+          eq(jobApplications.applicantId, user.id),
+        ),
+      )
+      .limit(1);
+    hasApplied = existingApplication.length > 0;
+
+    // Fetch their resumes for the dropdown
+    userResumes = await db
+
+      .select({ id: resumes.id, fileName: resumes.fileName })
+      .from(resumes)
+      .where(eq(resumes.applicantId, user.id));
+  }
 
   return (
     <div className="container mx-auto max-w-6xl py-10 px-4 space-y-8">
@@ -73,11 +100,24 @@ const JobsDetailedPage = async ({ params }: EditJobPageProps) => {
           </div>
         </div>
 
-        {/* Action Button */}
+        {/* -- INTERACTIVE ACTION BUTTON*/}
         <div className="flex gap-3 w-full md:w-auto mt-4 md:mt-0">
-          <Button size="lg" className="w-full md:w-auto font-semibold">
-            Apply Now
-          </Button>
+          {user ? (
+            <ApplyJobModal
+              jobId={parsedJobId}
+              jobTitle={job.title}
+              hasApplied={hasApplied}
+              resumes={userResumes}
+            />
+          ) : (
+            <Button
+              size="lg"
+              className="w-full md:w-auto font-semibold"
+              asChild
+            >
+              <Link href="/login">Login to Apply</Link>
+            </Button>
+          )}
         </div>
       </div>
 
