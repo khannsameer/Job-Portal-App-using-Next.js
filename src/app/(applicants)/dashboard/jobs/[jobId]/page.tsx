@@ -11,6 +11,7 @@ import { db } from "@/config/db";
 import { jobApplications, resumes } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import Link from "next/link";
+import { ApplyJobModal } from "@/features/applicants/jobs/components/apply-job-modal";
 
 interface EditJobPageProps {
   params: Promise<{ jobId: string }>;
