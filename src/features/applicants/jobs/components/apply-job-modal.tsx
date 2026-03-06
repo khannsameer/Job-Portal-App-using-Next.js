@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { applyForJobAction } from "../actions/apply-job.action";
 
 interface ApplyJobModalProps {
   jobId: number;
