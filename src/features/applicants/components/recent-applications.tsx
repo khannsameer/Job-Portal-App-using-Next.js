@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { CheckCircle2, MapPin } from "lucide-react";
+import { CheckCircle2, MapPin, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -12,51 +11,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Mock Data to match your screenshot
-const RECENT_APPLICATIONS = [
-  {
-    id: 1,
-    title: "Networking Engineer",
-    type: "Remote",
-    location: "Washington",
-    salary: "$50k-80k/month",
-    date: "Feb 2, 2026 19:28",
-    status: "Active",
-    logo: "/companies/google.png", // Replace with real logos or placeholders
-    company: "Google",
-    typeColor: "bg-blue-100 text-blue-700 hover:bg-blue-100",
-  },
-  {
-    id: 2,
-    title: "Product Designer",
-    type: "Full Time",
-    location: "Dhaka",
-    salary: "$50k-80k/month",
-    date: "Dec 7, 2025 23:26",
-    status: "Active",
-    logo: "/companies/dribbble.png",
-    company: "Dribbble",
-    typeColor: "bg-purple-100 text-purple-700 hover:bg-purple-100",
-  },
-  {
-    id: 3,
-    title: "Junior Graphic Designer",
-    type: "Temporary",
-    location: "Brazil",
-    salary: "$50k-80k/month",
-    date: "Feb 2, 2026 19:28",
-    status: "Active",
-    logo: "/companies/apple.png",
-    company: "Apple",
-    typeColor: "bg-blue-100 text-blue-700 hover:bg-blue-100", // Adjusted to match generic blue
-  },
-];
+interface RecentApplicationsProps {
+  applications: any[];
+}
 
-export function RecentApplications() {
+export function RecentApplications({ applications }: RecentApplicationsProps) {
+  if (applications.length === 0) {
+    return (
+      <div className="p-10 text-center text-gray-500">
+        You haven't applied to any jobs yet.
+      </div>
+    );
+  }
   return (
     <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b p-6">
         <h3 className="font-semibold text-gray-900">Recently Applied</h3>
+
         <Link
           href="/dashboard/applied-jobs"
           className="text-sm font-medium text-gray-500 hover:text-blue-600 flex items-center gap-1"
@@ -74,15 +45,15 @@ export function RecentApplications() {
             <TableHead className="text-right pr-6">Action</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {RECENT_APPLICATIONS.map((job) => (
-            <TableRow key={job.id} className="hover:bg-gray-50">
-              {/* Job Info Column */}
+          {applications.map(({ application, job, employer }) => (
+            <TableRow key={application.id} className="hover:bg-gray-50">
+              {/* Job Info */}
               <TableCell className="pl-6 py-4">
                 <div className="flex items-start gap-4">
-                  {/* Logo Placeholder */}
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-xs font-bold text-gray-500">
-                    {job.company.slice(0, 2).toUpperCase()}
+                    {employer?.name?.slice(0, 2).toUpperCase() || "CO"}
                   </div>
 
                   <div>
@@ -90,36 +61,46 @@ export function RecentApplications() {
                       <span className="font-semibold text-gray-900">
                         {job.title}
                       </span>
-                      <Badge
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-normal border-0 ${job.typeColor}`}
-                      >
-                        {job.type}
-                      </Badge>
+
+                      {job.jobType && (
+                        <Badge className="rounded-full px-2 py-0.5 text-[10px] font-normal border-0">
+                          {job.jobType}
+                        </Badge>
+                      )}
                     </div>
+
                     <div className="flex items-center gap-3 text-xs text-gray-500">
                       <span className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" /> {job.location}
+                        <MapPin className="h-3 w-3" />
+                        {job.location}
                       </span>
-                      <span>{job.salary}</span>
+
+                      <span>
+                        {job.minSalary} - {job.maxSalary} {job.salaryPeriod}
+                      </span>
                     </div>
                   </div>
                 </div>
               </TableCell>
 
-              {/* Date Column */}
+              {/* Date */}
               <TableCell className="text-sm text-gray-500">
-                {job.date}
+                {new Date(application.appliedAt).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </TableCell>
 
-              {/* Status Column */}
+              {/* Status */}
               <TableCell>
                 <div className="flex items-center gap-1.5 text-green-600 font-medium text-sm">
                   <CheckCircle2 className="h-4 w-4" />
-                  {job.status}
+                  {application.status}
                 </div>
               </TableCell>
 
-              {/* Action Column */}
+              {/* Action */}
               <TableCell className="text-right pr-6">
                 <Button
                   variant="secondary"
