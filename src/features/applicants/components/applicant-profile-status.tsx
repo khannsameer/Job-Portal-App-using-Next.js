@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { getApplicantProfileData } from "../server/applicant.queries";
 
 export async function ApplicantProfileStatus() {
-  // You can add logic here later: if (user.profileComplete) return null;
+  // logic here if (user.profileComplete) return null;
 
   const user = await getCurrentUser();
   if (!user) return redirect("/login");
