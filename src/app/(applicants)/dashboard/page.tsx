@@ -4,7 +4,6 @@ import { RecentApplications } from "@/features/applicants/components/recent-appl
 import { getCurrentUser } from "@/features/server/auth.queries";
 import { getApplicantStats } from "@/features/applicants/queries/applicant-stats.query";
 import { redirect } from "next/navigation";
-import { getAppliedJobsForApplicant } from "@/features/applicants/server/applicant.queries";
 
 const ApplicantDashboard = async () => {
   const user = await getCurrentUser();
@@ -12,9 +11,6 @@ const ApplicantDashboard = async () => {
 
   // Fetch stats
   const stats = await getApplicantStats();
-
-  // Fetch recent applied jobs
-  const appliedJobs = await getAppliedJobsForApplicant(user.id);
 
   return (
     <div className="space-y-8 p-6 max-w-7xl mx-auto">
@@ -39,7 +35,7 @@ const ApplicantDashboard = async () => {
       <ApplicantProfileStatus />
 
       {/* Recently Applied Table */}
-      <RecentApplications applications={appliedJobs} />
+      <RecentApplications />
     </div>
   );
 };
