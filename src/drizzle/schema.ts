@@ -133,6 +133,14 @@ export const jobApplications = mysqlTable("job_applications", {
   // You can add a status enum later if you want employers to "accept/reject"
   // status: mysqlEnum("status", ["pending", "reviewed", "rejected"]).default("pending"),
   appliedAt: timestamp("applied_at").defaultNow().notNull(),
+
+  status: mysqlEnum("status", [
+    "applied",
+    "reviewing",
+    "shortlisted",
+    "rejected",
+    "hired",
+  ]).default("applied"),
 });
 
 //! relation job application
