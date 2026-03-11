@@ -7,6 +7,17 @@ import { usePathname } from "next/navigation";
 import { applicantNavItems } from "@/config/constant";
 import { logoutUserAction } from "@/features/server/auth.actions";
 import { isActiveLink } from "@/lib/navigation-uitls";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 const ApplicantSidebar = () => {
   const pathname = usePathname();
@@ -46,13 +57,40 @@ const ApplicantSidebar = () => {
       </nav>
 
       <div className="absolute bottom-6 left-3 right-3">
-        <button
-          onClick={logoutUserAction}
-          className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors w-full"
-        >
-          <LogOut className="h-4 w-4" />
-          Log-out
-        </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-100 rounded-xl transition-all w-full">
+              <LogOut className="h-4 w-4" />
+              Log out
+            </button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent className="max-w-md rounded-2xl">
+            <AlertDialogHeader className="flex flex-col items-center text-center gap-2">
+              <AlertDialogTitle className="text-lg font-semibold">
+                Log out of your account?
+              </AlertDialogTitle>
+
+              <AlertDialogDescription className="text-sm text-muted-foreground">
+                You will be signed out and need to log in again to access your
+                dashboard.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter className="mt-4 flex gap-2">
+              <AlertDialogCancel className="rounded-lg">
+                Cancel
+              </AlertDialogCancel>
+
+              <AlertDialogAction
+                onClick={() => logoutUserAction()}
+                className="bg-red-600 hover:bg-red-700 text-white rounded-lg"
+              >
+                Log out
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
