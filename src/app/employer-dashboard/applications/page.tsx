@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
 import { Download, FileText, UserCircle, Briefcase } from "lucide-react";
 import {
   Table,
@@ -114,9 +114,12 @@ export default async function EmployerApplicationsPage() {
                     {/* Date Column */}
                     <TableCell>
                       <span className="text-sm text-gray-500 whitespace-nowrap">
-                        {formatDistanceToNow(new Date(application.appliedAt), {
-                          addSuffix: true,
-                        })}
+                        {formatDistanceToNowStrict(
+                          new Date(application.appliedAt),
+                          {
+                            addSuffix: true,
+                          },
+                        )}
                       </span>
                     </TableCell>
 
