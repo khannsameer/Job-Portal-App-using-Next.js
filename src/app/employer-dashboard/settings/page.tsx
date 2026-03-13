@@ -12,7 +12,15 @@ const EmployerSettings = async () => {
   // console.log("Current Employer:", currentEmployer);
 
   return (
-    <div>
+    <div className="max-w-5xl mx-auto space-y-6">
+      {/* Page Heading */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight ">Settings</h1>
+        <p className="text-muted-foreground text-sm">
+          Manage your company profile and organization information.
+        </p>
+      </div>
+
       <EmployerSettingForm
         initialData={{
           name: currentEmployer.employerDetails?.name ?? "",

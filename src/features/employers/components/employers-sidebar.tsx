@@ -15,6 +15,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 type NavigationItem = {
   name: string;
@@ -93,13 +104,34 @@ const EmployerSidebar = () => {
 
       {/* Logout */}
       <div className="p-3 border-t border-border">
-        <button
-          onClick={logoutUserAction}
-          className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors w-full"
-        >
-          <LogOut className="h-4 w-4" />
-          Log-out
-        </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors w-full">
+              <LogOut className="h-4 w-4" />
+              Log out
+            </button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Log out?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to log out of your account?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+              <AlertDialogAction
+                onClick={() => logoutUserAction()}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                Log out
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

@@ -76,7 +76,7 @@ const EmployerSettingForm = ({
   };
 
   return (
-    <Card className="w-3/4">
+    <Card className="w-full">
       <CardContent>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
           {/* Upload Logo */}
