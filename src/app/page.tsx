@@ -1,69 +1,87 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/features/server/auth.queries";
+import { Input } from "@/components/ui/input";
+import { db } from "@/config/db";
+import { employers, jobs, users } from "@/drizzle/schema";
+import { JobCard } from "@/features/employers/jobs/components/jobCards";
+import { desc, eq } from "drizzle-orm";
+import { Search } from "lucide-react";
+
+async function getFeaturedJobs() {
+  return await db
+    .select({
+      job: jobs,
+      employer: employers,
+      user: users,
+    })
+    .from(jobs)
+    .leftJoin(employers, eq(jobs.employerId, employers.id))
+    .leftJoin(users, eq(employers.id, users.id))
+    .orderBy(desc(jobs.createdAt))
+    .limit(6);
+}
 
 export default async function Home() {
-  const user = await getCurrentUser();
-  // console.log("users data::", user);
+  const featuredJobs = await getFeaturedJobs();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            {user?.name}
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1">
+        <section className="bg-gray-50 py-20 lg:py-32">
+          <div className="container mx-auto max-w-7xl px-4 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 tracking-tight mb-6">
+              Find a job that suits <br className="hidden md:block" />
+              your interest & skills.
+            </h1>
+
+            <p className="text-lg text-gray-500 mb-10 max-w-2xl mx-auto">
+              Discover thousands of job opportunities with top companies. Your
+              next career move starts right here.
+            </p>
+
+            <form
+              action="/jobs"
+              method="GET"
+              className="max-w-3xl mx-auto bg-white p-2 rounded-full shadow-lg flex flex-col sm:flex-row items-center gap-2 border"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-39.5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/8 px-5 transition-colors hover:border-transparent hover:bg-black/4 dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-39.5"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-          <Button>Click me</Button>
-        </div>
+              <div className="flex-1 flex items-center pl-4 w-full">
+                <Search className="w-5 h-5 text-gray-400" />
+
+                <Input
+                  name="search"
+                  type="text"
+                  placeholder="Job title, keyword ..."
+                  className="border-0 focus-visible:ring-0 shadow-none text-base"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full sm:w-auto rounded-full px-8"
+              >
+                Search Jobs
+              </Button>
+            </form>
+          </div>
+        </section>
+        <section className="py-16">
+          <div className="container mx-auto max-w-7xl px-4">
+            <h2 className="text-2xl font-semibold mb-6">Featured Jobs</h2>
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {featuredJobs.map(({ job, employer }) => (
+                <JobCard
+                  key={job.id}
+                  job={{
+                    ...job,
+                    companyName: employer?.name ?? null,
+                    companyLogo: null, // no error
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );

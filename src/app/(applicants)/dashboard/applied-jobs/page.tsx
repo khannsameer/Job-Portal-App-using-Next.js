@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Building2, MapPin, Clock, Banknote, CheckCircle2 } from "lucide-react";
-
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -127,9 +126,7 @@ export default async function AppliedJobsPage() {
                 {/* Footer Action */}
                 <CardFooter className="p-6 pt-0 mt-auto">
                   <Button variant="outline" className="w-full" asChild>
-                    <Link href={`/dashboard/jobs/${job.id}`}>
-                      View Job Details
-                    </Link>
+                    <Link href={`/jobs/${job.id}`}>View Job Details</Link>
                   </Button>
                 </CardFooter>
               </Card>

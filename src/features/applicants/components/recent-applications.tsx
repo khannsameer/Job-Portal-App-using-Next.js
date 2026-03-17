@@ -143,9 +143,7 @@ export async function RecentApplications() {
                       className="bg-gray-100 hover:bg-gray-200 text-blue-600 font-medium"
                       asChild
                     >
-                      <Link href={`/dashboard/jobs/${job.id}`}>
-                        View Details
-                      </Link>
+                      <Link href={`/jobs/${job.id}`}>View Details</Link>
                     </Button>
                   </TableCell>
                 </TableRow>
