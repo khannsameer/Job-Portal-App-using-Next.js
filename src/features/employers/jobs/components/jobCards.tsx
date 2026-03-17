@@ -19,7 +19,7 @@ export const JobCard = ({ job }: JobCardProps) => {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="group flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-blue-500/50 hover:shadow-md"
+      className="group flex flex-col gap-4 rounded-xl border bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg hover:border-blue-500/40"
     >
       {/* Header: Logo & Title */}
       <div className="flex items-start justify-between gap-4">
