@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import { Download, FileText, UserCircle, Briefcase } from "lucide-react";
 import {
   Table,
